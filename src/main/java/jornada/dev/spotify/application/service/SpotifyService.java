@@ -1,10 +1,14 @@
 package jornada.dev.spotify.application.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jornada.dev.spotify.application.config.SpotifyApiConfigurationPropertiesToken;
+import jornada.dev.spotify.application.exception.SpotifyBadTokenInserted;
+import jornada.dev.spotify.application.response.ErrorTokenResponse;
 import jornada.dev.spotify.application.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -19,6 +23,7 @@ public class SpotifyService {
 
     private final SpotifyApiConfigurationPropertiesToken tokenProperties;
 
+    private final ObjectMapper mapper;
 
     public MultiValueMap<String, String> httpBody() {
 
@@ -38,6 +43,10 @@ public class SpotifyService {
                 .headers(httpHeaders -> httpHeaders.add("Content-Type", "application/x-www-form-urlencoded"))
                 .body(httpBody())
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, ((request, response) -> {
+                    var tokenErrorResponse = mapper.readValue(response.getBody().readAllBytes(), ErrorTokenResponse.class);
+                    throw new SpotifyBadTokenInserted(tokenErrorResponse.error_description());
+                }))
                 .toEntity(TokenResponse.class).getBody();
     }
 
