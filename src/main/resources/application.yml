@@ -1,0 +1,14 @@
+server:
+  port: 8080
+  error:
+    include-stacktrace: never
+
+spotify-api:
+  token:
+    token-base-url: https://accounts.spotify.com/
+    uri-token: api/token
+    grant-type: client_credentials
+    client-id: ${CLIENT_ID:YOUR_CLIENT_ID}
+    client-secret: ${CLIENT_SECRET:YOUR_CLIENT_SECRET}
+  base-url: https://api.spotify.com/v1/
+  uri-albums: albums/{albumId}
