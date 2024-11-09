@@ -1,13 +1,12 @@
 package jornada.dev.spotify.application.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jornada.dev.spotify.application.domain.SpotifyError;
 import lombok.Builder;
 
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record TokenErrorResponse(Integer status, String error_description) {
+public record SpotifyErrorResponse(SpotifyError error) {
 }
 

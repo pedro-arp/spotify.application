@@ -3,18 +3,27 @@ package jornada.dev.spotify.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jornada.dev.spotify.application.config.SpotifyApiConfigurationProperties;
 import jornada.dev.spotify.application.config.SpotifyApiConfigurationPropertiesToken;
+import jornada.dev.spotify.application.exception.SpotifyBadRequest;
 import jornada.dev.spotify.application.exception.SpotifyBadTokenInserted;
+import jornada.dev.spotify.application.exception.SpotifyNotFound;
+import jornada.dev.spotify.application.exception.SpotifyUnauthorized;
 import jornada.dev.spotify.application.response.AlbumGetResponse;
+import jornada.dev.spotify.application.response.SpotifyErrorResponse;
 import jornada.dev.spotify.application.response.TokenErrorResponse;
 import jornada.dev.spotify.application.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -57,11 +66,30 @@ public class SpotifyService {
         return spotifyRestClient
                 .get()
                 .uri(properties.baseUrl() + properties.uriAlbums(), albumId)
-                .headers(httpHeaders -> httpHeaders.add("Authorization", "Bearer " + token().accessToken()
-                ))
+                .headers(getHttpHeadersConsumer())
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    var albumErrorResponse = mapper.readValue(response.getBody().readAllBytes(), SpotifyErrorResponse.class);
+
+                    switch (response.getStatusCode()) {
+                        case HttpStatus.BAD_REQUEST:
+                            throw new SpotifyBadRequest(albumErrorResponse.error().message());
+                        case HttpStatus.UNAUTHORIZED:
+                            throw new SpotifyUnauthorized(albumErrorResponse.error().message());
+                        case HttpStatus.NOT_FOUND:
+                            throw new SpotifyNotFound(albumErrorResponse.error().message());
+                        default:
+                            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, albumErrorResponse.toString());
+                    }
+                })
                 .body(AlbumGetResponse.class);
     }
 
+    private Consumer<HttpHeaders> getHttpHeadersConsumer() {
 
+        return httpHeaders -> httpHeaders.add("Authorization", "Bearer " + token().accessToken()
+        );
+
+
+    }
 }
