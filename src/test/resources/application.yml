@@ -1,0 +1,14 @@
+logging:
+  level:
+    root: INFO
+server:
+  error:
+    include-binding-errors: ALWAYS
+    include-message: ALWAYS
+spotify-api:
+  token:
+    token-base-url: http://localhost:${wiremock.server.port}/
+    uri-token: api/token
+    grant-type: client_credentials
+    client-id: VALID_CLIENT_ID
+    client-secret: VALID_CLIENT_SECRET

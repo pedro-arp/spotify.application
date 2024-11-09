@@ -6,6 +6,6 @@ import lombok.Builder;
 
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record ErrorTokenResponse(Integer status, String error_description) {
+public record TokenErrorResponse(Integer status, String error_description) {
 }
 
