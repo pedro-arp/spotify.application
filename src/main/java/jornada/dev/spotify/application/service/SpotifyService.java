@@ -1,8 +1,10 @@
 package jornada.dev.spotify.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jornada.dev.spotify.application.config.SpotifyApiConfigurationProperties;
 import jornada.dev.spotify.application.config.SpotifyApiConfigurationPropertiesToken;
 import jornada.dev.spotify.application.exception.SpotifyBadTokenInserted;
+import jornada.dev.spotify.application.response.AlbumGetResponse;
 import jornada.dev.spotify.application.response.TokenErrorResponse;
 import jornada.dev.spotify.application.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class SpotifyService {
     private final RestClient spotifyRestClient;
 
     private final SpotifyApiConfigurationPropertiesToken tokenProperties;
+
+    private final SpotifyApiConfigurationProperties properties;
 
     private final ObjectMapper mapper;
 
@@ -47,6 +51,16 @@ public class SpotifyService {
                     throw new SpotifyBadTokenInserted(tokenErrorResponse.error_description());
                 }))
                 .toEntity(TokenResponse.class).getBody();
+    }
+
+    public AlbumGetResponse getAlbum(String albumId) {
+        return spotifyRestClient
+                .get()
+                .uri(properties.baseUrl() + properties.uriAlbums(), albumId)
+                .headers(httpHeaders -> httpHeaders.add("Authorization", "Bearer " + token().accessToken()
+                ))
+                .retrieve()
+                .body(AlbumGetResponse.class);
     }
 
 

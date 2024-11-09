@@ -12,3 +12,5 @@ spotify-api:
     grant-type: client_credentials
     client-id: VALID_CLIENT_ID
     client-secret: VALID_CLIENT_SECRET
+  base-url: https://api.spotify.com/v1/
+  uri-albums: albums/{albumId}
