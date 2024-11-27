@@ -8,7 +8,9 @@ import org.springframework.web.client.RestClient;
 @Configuration
 @RequiredArgsConstructor
 public class RestClientConfiguration {
+
     private final SpotifyApiConfigurationProperties spotifyApiConfigurationProperties;
+
 
     @Bean
     public RestClient spotifyApiClient(RestClient.Builder builder) {

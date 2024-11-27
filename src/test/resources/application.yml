@@ -5,6 +5,8 @@ server:
   error:
     include-binding-errors: ALWAYS
     include-message: ALWAYS
+variables:
+  bearer-token: ${BEARER_TOKEN:VALID_BEARER_TOKEN}
 spotify-api:
   token:
     token-base-url: http://localhost:${wiremock.server.port}/
@@ -12,5 +14,5 @@ spotify-api:
     grant-type: client_credentials
     client-id: VALID_CLIENT_ID
     client-secret: VALID_CLIENT_SECRET
-  base-url: https://api.spotify.com/v1/
+  base-url: http://localhost:${wiremock.server.port}/
   uri-albums: albums/{albumId}

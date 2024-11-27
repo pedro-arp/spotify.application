@@ -1,1 +1,1 @@
-{"status":400,"error_description":"Invalid client"}
+{"status":400,"message":"TokenErrorResponse[error=invalid_client, error_description=Invalid client secret]"}

@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/albums/InvalidId",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer VALID_BEARER_TOKEN"
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "bodyFileName": "get-album-error-response-400.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+
+
+

@@ -8,6 +8,6 @@ import lombok.Builder;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record TokenErrorResponse(Integer status, String error_description) {
+public record TokenErrorResponse(String error, String error_description) {
 }
 

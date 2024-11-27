@@ -3,6 +3,8 @@ server:
   error:
     include-stacktrace: never
 
+variables:
+    bearer-token: BQCM2GAJOcnM_nkA_nzQiBWA5X39ItMBx1YGaQWfAW-Zwf6hbQfDOLYRG1a6QJPZDD2sGeICnW6NX0-E7B8aoBSkOuG-Et9JbuEK3xMEELm5h3R3-5Y
 spotify-api:
   token:
     token-base-url: https://accounts.spotify.com/
