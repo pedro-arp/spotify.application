@@ -16,6 +16,7 @@
     <ul>
         <li>Java 21</li>
         <li>Maven for dependency management and project builds</li>
+        <li>Docker to run integration tests</li>
         <li>Spotify Developer Account to obtain <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code>.</li>
     </ul>
     
